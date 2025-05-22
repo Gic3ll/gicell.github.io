@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WEB SIMOPEL</title>
+    <link rel="stylesheet" href="kuota.css">
+</head>
+<body>
+
+    <header>
+        <h1 class="logo">Gicell</h1>
+        <button class="btn-cta" onclick="window.location.href='file:///C:/Users/NAGASARI/Desktop/WEB%20SIMOPEL/index.html';">Kembali</button>
+    </header>
+
+    <!-- Logo -->
+    <div class="logo">
+        <img src="Aset/icon/cell.jpg" alt="Logo" width="180">
+        <p>PAKET DATA</p>
+    </div>
+
+    <!-- Running Text -->
+    <div class="marquee">
+        <span>AyOooo Kumpulkan Poin anda, Tukar dengan hadiah menarik!!!!!</span>
+    </div>
+
+<title>Daftar Paket Kuota</title>
+  <link rel="stylesheet" href="tampilan.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #ffffff;
+    }
+
+    .filter-section {
+      max-width: 800px;
+      margin: 20px auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      background: #ffffff;
+      padding: 10px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .filter-section div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin: 30px auto;
+      max-width: 1000px;
+    }
+
+    .card {
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      background-color: #0050c8;
+      color: white;
+      width: 100%;
+      max-width: 400px;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .card-xl { background-color: #0050c8; }
+    .card-axis { background-color: #d200ff; }
+    .card-telkomsel { background-color: #d30000; }
+    .card-byu { background-color: #00b8d9; }
+    .card-im3 { background-color: #ffcb05; color: black; }
+    .card-tri { background-color: #7200ca; }
+    .card-smartfren { background-color: #e30b5c; }
+
+    .card h3 {
+      margin-top: 0;
+      font-size: 15px;
+    }
+
+    .card .info {
+      font-size: 13px;
+      margin: 1px 0;
+    }
+
+    .detail-button {
+      background-color: #ffc107;
+      border: none;
+      color: black;
+      font-weight: bold;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .detail-section {
+      display: none;
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 10px;
+    }
+
+    .detail-section p {
+      margin: 4px 0;
+      font-size: 14px;
+    }
+
+    select, input[type="number"] {
+      padding: 6px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #0050c8;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button i {
+      margin-right: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="filter-section">
+    <div style="flex-grow: 1;">
+      <label for="filterProvider"><i class="fa-solid fa-network-wired"></i> Pilih Provider:</label>
+      <select id="filterProvider" onchange="tampilkanInputLain()">
+        <option value="">-- Pilih Provider --</option>
+        <option value="xl">XL</option>
+        <option value="axis">AXIS</option>
+        <option value="telkomsel">TELKOMSEL</option>
+        <option value="byu">BY.U</option>
+        <option value="im3">IM3</option>
+        <option value="tri">TRI</option>
+        <option value="smartfren">SmartFren</option>
+      </select>
+    </div>
+
+    <div style="display:flex; align-items: flex-end;">
+      <a href="file:///C:/Users/NAGASARI/Desktop/WEB%20SIMOPEL/index.html">
+      </a>
+    </div>
+  </div>
+
+  <div class="filter-section" id="inputLanjutan" style="display:none; flex-wrap: wrap; gap:10px;">
+    <div>
+      <label for="filterMasaAktif"><i class="fa-solid fa-clock"></i> Masa Aktif (hari):</label>
+      <input type="number" id="filterMasaAktif" placeholder="Contoh: 10">
+    </div>
+    <div>
+      <label for="hargaMin"><i class="fa-solid fa-coins"></i> Harga Min (ribu):</label>
+      <input type="number" id="hargaMin" placeholder="Contoh: 10">
+    </div>
+    <div>
+      <label for="hargaMax"><i class="fa-solid fa-sack-dollar"></i> Harga Max (ribu):</label>
+      <input type="number" id="hargaMax" placeholder="Contoh: 30">
+    </div>
+    <div style="display: flex; gap: 8px; align-items: flex-end;">
+      <button onclick="tampilkanFilter()"><i class="fa-solid fa-filter"></i> Tampilkan</button>
+    </div>
+  </div>
+
+  <div class="card-container" id="cardContainer"></div>
+
+  <script>
+    function tampilkanInputLain() {
+      const provider = document.getElementById("filterProvider").value;
+      const inputLanjutan = document.getElementById("inputLanjutan");
+      inputLanjutan.style.display = provider ? "flex" : "none";
+    }
+
+    function parseRupiah(val) {
+      return parseInt(val.replace(/\D/g, '')) || 0;
+    }
+
+    function tampilkanFilter() {
+      const provider = document.getElementById("filterProvider").value;
+      if (!provider) {
+        alert("Silakan pilih provider terlebih dahulu.");
+        return;
+      }
+
+      const masaAktif = parseInt(document.getElementById("filterMasaAktif").value);
+      const hargaMin = parseInt(document.getElementById("hargaMin").value) * 1000;
+      const hargaMax = parseInt(document.getElementById("hargaMax").value) * 1000;
+
+      const semuaData = JSON.parse(localStorage.getItem("paketData")) || [];
+      const container = document.getElementById("cardContainer");
+      container.innerHTML = "";
+
+      semuaData.forEach((data) => {
+        const harga = parseRupiah(data.harga);
+        const masa = parseInt(data.masa);
+
+        if (
+          (!provider || data.provider === provider) &&
+          (!masaAktif || masa === masaAktif) &&
+          (!hargaMin || harga >= hargaMin) &&
+          (!hargaMax || harga <= hargaMax)
+        ) {
+          const card = document.createElement("div");
+          card.className = "card card-" + data.provider;
+          card.innerHTML = `
+            <h3><i class="fa-solid fa-signal"></i> ${data.paket}</h3>
+            <div class="info"><i class="fa-solid fa-database"></i> <strong>Total Kuota:</strong> ${data.total}</div>
+            <div class="info"><i class="fa-solid fa-clock"></i> <strong>Masa Aktif:</strong> ${data.masa} hari</div>
+            <div class="info"><i class="fa-solid fa-money-bill-wave"></i> <strong>Harga:</strong> ${data.harga}</div>
+            <button class="detail-button" onclick="toggleDetail(this)">Lihat Detail</button>
+            <div class="detail-section">
+              ${data.utama ? `<p><b>Kuota Utama:</b> ${data.utama}</p>` : ""}
+              ${data.youtube ? `<p><b>Kuota Youtube:</b> ${data.youtube}</p>` : ""}
+              ${data.chat ? `<p><b>Kuota Chat:</b> ${data.chat}</p>` : ""}
+              ${data.lokal ? `<p><b>Kuota Lokal:</b> ${data.lokal}</p>` : ""}
+              ${data.malam ? `<p><b>Kuota Malam:</b> ${data.malam}</p>` : ""}
+              ${data.nelpon ? `<p><b>Kuota Nelpon:</b> ${data.nelpon}</p>` : ""}
+              ${data.bersama ? `<p><b>Kuota Bersama:</b> ${data.bersama}</p>` : ""}
+              ${data.aplikasi ? `<p><b>Aplikasi Tertentu:</b> ${data.aplikasi}</p>` : ""}
+              ${data.jaringan ? `<p><b>Semua Jaringan:</b> ${data.jaringan}</p>` : ""}
+              ${data.keterangan ? `<p><b>Keterangan Tambahan:</b> ${data.keterangan}</p>` : ""}
+              ${data.manual1 ? `<p><b>Pertanyaan 1:</b> ${data.manual1}</p>` : ""}
+              ${data.manual2 ? `<p><b>Pertanyaan 2:</b> ${data.manual2}</p>` : ""}
+              ${data.manual3 ? `<p><b>Pertanyaan 3:</b> ${data.manual3}</p>` : ""}
+            </div>
+          `;
+          container.appendChild(card);
+        }
+      });
+    }
+
+    function toggleDetail(btn) {
+      const detail = btn.nextElementSibling;
+      if (detail.style.display === "block") {
+        detail.style.display = "none";
+        btn.innerText = "Lihat Detail";
+      } else {
+        detail.style.display = "block";
+        btn.innerText = "Sembunyikan";
+      }
+    }
+  </script>
+
+</body>
+</html>

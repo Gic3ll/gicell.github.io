@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Google Drive</title>
+    <style>
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .gallery img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Galeri Foto dari Google Drive</h2>
+    <div class="gallery" id="gallery"></div>
+
+    <script>
+        const folderId = "17Zpi9GwtIw6_92CIavw5011A-V57C0A32RNTD6oqMJPbSHqVODWJtXhQg0eY9qxBZFfEfJLX"; // Ganti dengan ID folder Anda
+        const apiKey = "YOUR_GOOGLE_DRIVE_API_KEY"; // Ganti dengan API Key Anda
+
+        async function loadImages() {
+            const response = await fetch(`https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&key=${apiKey}&fields=files(id,name,mimeType)`);
+            const data = await response.json();
+            const gallery = document.getElementById("gallery");
+
+            data.files.forEach(file => {
+                if (file.mimeType.startsWith("image/")) {
+                    const imgUrl = `https://drive.google.com/uc?export=view&id=${file.id}`;
+                    const imgElement = document.createElement("img");
+                    imgElement.src = imgUrl;
+                    imgElement.alt = file.name;
+                    gallery.appendChild(imgElement);
+                }
+            });
+        }
+
+        loadImages();
+    </script>
+</body>
+</html>

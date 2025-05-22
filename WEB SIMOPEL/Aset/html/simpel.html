@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasbor Halaman</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-image: url('C:/Users/NAGASARI/Desktop/website awal/img/Label.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .logo {
+            font-family: 'Segoe Script', Times, serif;
+            margin-top: 15px;
+            font-size: 35px;
+            color: #4907ff;
+            font-weight: bold;
+        }
+        .marquee {
+            margin-top: 20px;
+            font-size: 35px;
+            color: #333;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            display: block;
+            position: relative;
+        }
+        .marquee span {
+            display: inline-block;
+            position: relative;
+            animation: scroll 10s linear infinite;
+        }
+        @keyframes scroll {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+        .slider {
+            margin-top: 20px;
+            width: 30%;
+            height: 300px;
+            overflow: hidden;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+        .slider img {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 100%;
+            animation: slide 18s infinite;
+        }
+        .slider img:nth-child(1) {
+            animation-delay: 0s;
+        }
+        .slider img:nth-child(2) {
+            animation-delay: 6s;
+        }
+        .slider img:nth-child(3) {
+            animation-delay: 12s;
+        }
+        @keyframes slide {
+            0% {
+                left: 100%;
+                opacity: 0;
+            }
+            5% {
+                left: 0;
+                opacity: 1;
+            }
+            33% {
+                left: 0;
+                opacity: 1;
+            }
+            38% {
+                left: -100%;
+                opacity: 0;
+            }
+            100% {
+                left: -100%;
+                opacity: 0;
+            }
+        }
+        .button-container {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            justify-items: center;
+        }
+        .button-item {
+            text-align: center;
+        }
+        .button-item img {
+            cursor: pointer;
+            width: 100px;
+            height: 100px;
+        }
+        .button-item p {
+            margin-top: 10px;
+            font-size: 30px;
+            color: #f3f1f1;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Logo -->
+    <div class="logo">
+        <img src="C:/Users/NAGASARI/Desktop/website awal/img/sugih.png" alt="Logo" width="150">
+        <p>Desa Cipanas Istimewa</q>
+    </div>
+
+    <!-- Running Text -->
+    <div class="marquee">
+        <span>SELAMAT DATANG DI APLIKASI (SIMPEL) SISTEM INFORMASI MOBIL PELAYANAN DESA CIPANAS</span>
+    </div>
+
+    <!-- Slider -->
+    <div class="slider">
+        <img src="C:/Users/NAGASARI/Desktop/website awal/img/sleder1.png" alt="Sleder 1">
+        <img src="C:/Users/NAGASARI/Desktop/website awal/img/sleder2.png" alt="Sleder 2">
+        <img src="C:/Users/NAGASARI/Desktop/website awal/img/sleder3.png" alt="Sleder 3">
+    </div>
+
+    <!-- Buttons -->
+    <div class="button-container">
+        <div class="button-item">
+            <a href="file:///C:/Users/NAGASARI/Desktop/website%20awal/Pertanyaan.html">
+                <img src="C:/Users/NAGASARI/Desktop/website awal/img/Laporan.png" alt="Input Data">
+                <p>Input Data</p>
+            </a>
+        </div>
+        <div class="button-item">
+            <a href="file:///C:/Users/NAGASARI/Desktop/website%20awal/Hasil Jawaban.html">
+                <img src="C:/Users/NAGASARI/Desktop/website awal/img/reading-book.png" alt="File">
+                <p>File</p>
+            </a>
+        </div>
+        <div class="button-item">
+            <a href="file:///C:/Users/NAGASARI/Desktop/website%20awal/Kalenderpemesanan.html">
+            <img src="C:/Users/NAGASARI/Desktop/website awal/img/Agendak.png" alt="Agenda">
+            <p>Agenda</p>
+            </a>
+        </div>
+        <div class="button-item">
+            <img src="C:/Users/NAGASARI/Desktop/website awal/img/service.png" alt="Service">
+            <p>Service</p>
+        </div>
+        <div class="button-item">
+            <img src="C:/Users/NAGASARI/Desktop/website awal/img/galery.png" alt="Galery">
+            <p>Foto Kegiatan</p>
+        </div>
+        <div class="button-item">
+            <a href="https://whatsform.com/IZUBVI">
+            <img src="C:/Users/NAGASARI/Desktop/website awal/img/pesan.png" alt="Pesan Kendaraan">
+            <p>Pesan Kendaraan</p>
+        </div>
+    </div>
+
+</body>
+</html>

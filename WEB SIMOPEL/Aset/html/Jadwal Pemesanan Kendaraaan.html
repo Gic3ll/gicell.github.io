@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadwal Pemesanan Kendaraaan</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: auto;
+      padding: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    thead th {
+      background-color: #118f15;
+      color: white;
+      border: 1px solid black;
+      text-align: center;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 10px;
+      text-align: center;
+    }
+    tr:nth-child(even) {background-color: #f2f2f2;}
+    
+    /* Tombol */
+    .btn-container {
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 11px;
+      cursor: pointer;
+      border: none;
+      color: white;
+    }
+    .print-btn { background-color: #1243e2; }
+    .dashboard-btn { background-color: #ce1d10; }
+
+    /* Responsiveness untuk HP */
+    @media screen and (max-width: 768px) {
+      table {
+        display: block;
+        overflow-x: auto; /* Supaya bisa digeser di layar kecil */
+        white-space: nowrap;
+      }
+      th, td {
+        padding: 8px;
+        font-size: 11px;
+      }
+      button {
+        font-size: 11px;
+        padding: 8px 16px;
+      }
+    }
+
+    /* Mode Cetak */
+    @media print {
+      body {
+        text-align: left;
+        transform: scale(0.9);
+      }
+      .btn-container {
+        display: none; /* Sembunyikan tombol saat cetak */
+      }
+      table {
+        page-break-inside: auto;
+      }
+      thead {
+        display: table-header-group;
+      }
+      tbody {
+        display: table-row-group;
+      }
+      tr {
+        page-break-inside: avoid;
+      }
+      th:first-child, td:first-child {
+        position: sticky;
+        left: 0;
+        background-color: white;
+        z-index: 2;
+      }
+      @page {
+        size: A4 landscape;
+        margin: 10mm;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Jadwal Pemesanan Kendaraaan</h1>
+    
+    <div class="btn-container">
+      <button class="print-btn" onclick="window.print()">Print Data</button>
+      <button class="dashboard-btn" onclick="window.location.href='file:///C:/Users/NAGASARI/Desktop/WEB%20SIMOPEL/index.html'">Pergi ke Dashboard</button>
+    </div>
+    
+    <div style="overflow-x: auto;">
+      <table id="myTable">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Tanggal</th>
+            <th>Petugas</th>
+            <th>Jenis Kendaraan</th>
+            <th>Pemohon</th>
+            <th>Alamat</th>
+            <th>RT</th>
+            <th>RW</th>
+            <th>Desa</th>
+            <th>Kec</th>
+            <th>Tujuan</th>
+            <th>Jenis Keperluan</th>
+            <th>Jumlah Penumpang</th>
+            <th>Biaya</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+  
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbw9awyuRJ4TpOccj7i3ulTUpkyCgsHFwGSdzTFk9h0aB-O9iICVFzhfjdTPogS_10r3Yg/exec";
+
+    async function getData() {
+      try {
+        const response = await fetch(scriptURL);
+        const jsonData = await response.json();
+        const tbody = document.querySelector("#myTable tbody");
+        tbody.innerHTML = "";
+        
+        jsonData.forEach(item => {
+          const row = document.createElement("tr");
+          let formattedDate = formatDate(item["Tanggal"]);
+          row.innerHTML = `
+            <td>${item["No"] || ""}</td>
+            <td>${formattedDate || ""}</td>
+            <td>${item["Petugas"] || ""}</td>
+            <td>${item["Jenis Kendaraan"] || ""}</td>
+            <td>${item["Pemohon"] || ""}</td>
+            <td>${item["Alamat"] || ""}</td>
+            <td>${item["RT"] || ""}</td>
+            <td>${item["RW"] || ""}</td>
+            <td>${item["Desa"] || ""}</td>
+            <td>${item["Kec"] || ""}</td>
+            <td>${item["Tujuan"] || ""}</td>
+            <td>${item["Jenis Keperluan"] || ""}</td>
+            <td>${item["Jumlah Penumpang"] || ""}</td>
+            <td>${item["Biaya"] || ""}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        console.error("Gagal mengambil data:", error);
+      }
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return "";
+      let date = new Date(dateString);
+      let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      return date.toLocaleDateString('id-ID', options);
+    }
+
+    getData();
+  </script>
+</body>
+</html>

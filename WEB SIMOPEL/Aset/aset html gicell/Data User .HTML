@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Data User</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 40px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Data User</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>Tgl Registrasi</th>
+            <th>Nama</th>
+            <th>No HP</th>
+            <th>Password</th>
+            <th>Foto Profil</th>
+        </tr>
+    </thead>
+    <tbody id="dataTable">
+        <!-- Data akan dimuat melalui JavaScript -->
+    </tbody>
+</table>
+
+<script>
+    // Ambil data dari localStorage
+    const nama = localStorage.getItem('nama');
+    const nohp = localStorage.getItem('nohp');
+    const password = localStorage.getItem('password');
+    const foto = localStorage.getItem('foto');
+    const tanggal = new Date().toLocaleDateString('id-ID');
+
+    // Validasi data
+    if (nama && nohp && password && foto) {
+        const tableBody = document.getElementById("dataTable");
+
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+            <td>1</td>
+            <td>${tanggal}</td>
+            <td>${nama}</td>
+            <td>${nohp}</td>
+            <td>${password}</td>
+            <td><img src="${foto}" alt="Foto Profil"></td>
+        `;
+
+        tableBody.appendChild(newRow);
+    } else {
+        document.getElementById("dataTable").innerHTML = `
+            <tr><td colspan="6">Tidak ada data yang ditemukan. Silakan lakukan registrasi terlebih dahulu.</td></tr>
+        `;
+    }
+</script>
+
+</body>
+</html>

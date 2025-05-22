@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aplikasi Konter - Member</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; }
+    .hidden { display: none; }
+    .profile-pic { width: 40px; height: 40px; border-radius: 50%; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #333; color: #fff; }
+    .container { padding: 20px; }
+    .notif { color: green; font-weight: bold; }
+    .error { color: red; }
+    input, select { padding: 5px; margin: 5px 0; width: 100%; }
+    button { padding: 10px; margin-top: 10px; }
+    .card { border: 1px solid #ccc; padding: 10px; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <span id="app-title">Aplikasi Konter</span>
+    <img id="fotoUser" class="profile-pic hidden" />
+    <div id="profile" style="position: absolute; top: 10px; right: 10px;"></div>
+  </div>
+
+  <div class="container">
+    <div id="authSection">
+      <h2>Login / Daftar</h2>
+      <input type="text" id="nama" placeholder="Nama" />
+      <input type="text" id="hp" placeholder="Nomor HP" />
+      <input type="password" id="sandi" placeholder="Kata Sandi (min 4 karakter)" />
+      <input type="file" id="foto" accept="image/*" />
+      <button onclick="register()">Daftar</button>
+      <button onclick="login()">Login</button>
+      <div id="authError" class="error"></div>
+    </div>
+
+    <div id="userSection" class="hidden">
+      <h2>Halo, <span id="userNama"></span></h2>
+      <button onclick="showEditForm()">Edit Profil</button>
+      <button onclick="logout()">Logout</button>
+      <hr />
+      <!-- fitur member lainnya akan ditampilkan di sini -->
+      <div id="mainContent"></div>
+    </div>
+  </div>
+<script>
+  
+  let currentUser = null;
+
+  function register() {
+    const nama = document.getElementById("nama").value.trim();
+    const hp = document.getElementById("hp").value.trim();
+    const sandi = document.getElementById("sandi").value;
+    const foto = document.getElementById("foto").files[0];
+
+    if (!nama || !hp || sandi.length < 4 || !foto) {
+      return showError("Isi semua data dengan benar!");
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const fotoBase64 = reader.result;
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      if (users[hp]) return showError("Nomor sudah terdaftar");
+
+      users[hp] = { nama, sandi, foto: fotoBase64, poin: 0, transaksi: [] };
+      localStorage.setItem("users", JSON.stringify(users));
+      showSuccess("Pendaftaran berhasil! Silakan login.");
+    };
+    reader.readAsDataURL(foto);
+  }
+
+  function login() {
+    const hp = document.getElementById("hp").value.trim();
+    const sandi = document.getElementById("sandi").value;
+
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
+    if (!users[hp] || users[hp].sandi !== sandi) {
+      return showError("Login gagal. Periksa nama atau kata sandi.");
+    }
+
+    currentUser = { ...users[hp], hp };
+    showUserArea();
+  }
+
+  function logout() {
+    currentUser = null;
+    location.reload();
+  }
+
+  function showUserArea() {
+    document.getElementById("authSection").classList.add("hidden");
+    document.getElementById("userSection").classList.remove("hidden");
+    document.getElementById("userNama").innerText = currentUser.nama;
+    document.getElementById("fotoUser").src = currentUser.foto;
+    document.getElementById("fotoUser").classList.remove("hidden");
+    showMainContent();
+  }
+
+  function showError(msg) {
+    document.getElementById("authError").innerText = msg;
+  }
+
+  function showSuccess(msg) {
+    document.getElementById("authError").innerText = "";
+    alert(msg);
+  }
+</script>
+<script>
+  const hadiahList = [
+    { nama: "SENDOK 6 PCS", poin: 400 },
+    { nama: "MANGKUK 6", poin: 900 },
+    { nama: "PIRING PELASTIK 12 PC", poin: 1000 },
+    { nama: "SETRIKA PHILIPPS", poin: 2400 },
+    { nama: "KIPAS ANGIN DUDUK", poin: 4000 },
+    { nama: "KOMPOR GAS RINAIY", poin: 7000 },
+    { nama: "TV 21 INC", poin: 15000 },
+    { nama: "KULKAS SANKEN", poin: 35000 },
+    { nama: "MESIN CUCI", poin: 37000 }
+  ];
+
+  function showMainContent() {
+  const main = document.getElementById("mainContent");
+  document.getElementById("profile").innerHTML = `
+    <img src="${currentUser.foto || 'https://via.placeholder.com/40'}" style="width:40px;height:40px;border-radius:50%;" title="${currentUser.nama}"/>
+  `;
+
+  main.innerHTML = `
+    <h3>Poin Anda: <span id="userPoin">${currentUser.poin}</span></h3>
+    <button onclick="showPembelian()">Pembelian</button>
+    <button onclick="showHadiah()">Penukaran Poin</button>
+    <button onclick="showRiwayat()">Riwayat Transaksi</button>
+    <button onclick="showEditProfil()">Edit Profil</button>
+    <div id="notifArea"></div>
+    <div id="formArea"></div>
+  `;
+  checkPoinNotif();
+}
+
+  }
+
+  function checkPoinNotif() {
+    const notif = document.getElementById("notifArea");
+    notif.innerHTML = "";
+    hadiahList.forEach(h => {
+      if (currentUser.poin >= h.poin * 0.9 && currentUser.poin < h.poin) {
+        notif.innerHTML += `
+          <div class="notif">
+            Poin Anda hampir cukup untuk "${h.nama}" (${h.poin} poin). Tukar sekarang?
+            <button onclick="tukarHadiah('${h.nama}', ${h.poin})">Tukar</button>
+          </div>`;
+      }
+    });
+  }
+
+  function showPembelian() {
+    document.getElementById("formArea").innerHTML = `
+      <h4>Pilih Jenis Transaksi</h4>
+      <select id="jenis">
+        <option value="Barang">Barang / Aksesoris</option>
+        <option value="Pulsa">Pulsa / Token / Paket</option>
+        <option value="TopUp">Top-up / Tarik Tunai</option>
+      </select>
+      <input id="namaBarang" placeholder="Nama Barang / Tujuan"/>
+      <input id="nominal" type="number" placeholder="Harga / Nominal"/>
+      <button onclick="prosesPembelian()">Bayar</button>
+    `;
+  }
+
+  function prosesPembelian() {
+    const jenis = document.getElementById("jenis").value;
+    const nama = document.getElementById("namaBarang").value;
+    const nominal = parseInt(document.getElementById("nominal").value);
+
+    if (!nama || nominal <= 0) return alert("Isi data dengan benar.");
+
+    const trx = {
+      id: Date.now(),
+      jenis,
+      nama,
+      nominal,
+      status: "Menunggu Verifikasi",
+      tanggal: new Date().toLocaleString()
+    };
+
+    currentUser.transaksi.push(trx);
+    saveUser();
+    alert("Pembelian sedang diproses oleh admin.");
+    showMainContent();
+  }
+
+  function hitungPoin(jenis, nominal) {
+    if (jenis === "Barang") return 1;
+    if (jenis === "Pulsa") return 4;
+
+    if (jenis === "TopUp") {
+      if (nominal >= 5000 && nominal <= 25000) return 6;
+      if (nominal <= 40000) return 7;
+      if (nominal <= 450000) return 10;
+      if (nominal <= 900000) return 20;
+      if (nominal <= 1900000) return 25;
+      if (nominal <= 2000000) return 30;
+      if (nominal <= 3000000) return 50;
+      if (nominal <= 4000000) return 60;
+      if (nominal <= 5000000) return 100;
+      if (nominal <= 6000000) return 120;
+      if (nominal <= 7000000) return 140;
+      if (nominal <= 8000000) return 160;
+      if (nominal <= 9000000) return 180;
+      if (nominal >= 10000000) return 200;
+    }
+    return 0;
+  }
+
+  function showRiwayat() {
+    const riwayat = currentUser.transaksi;
+    let html = "<h4>Riwayat Transaksi</h4>";
+    riwayat.forEach(trx => {
+      html += `
+        <div class="card">
+          <strong>${trx.jenis}</strong> - ${trx.nama}<br/>
+          Nominal: ${trx.nominal} - Status: ${trx.status}<br/>
+          Tanggal: ${trx.tanggal}
+        </div>
+      `;
+    });
+    document.getElementById("formArea").innerHTML = html;
+  }
+
+  function showHadiah() {
+    let html = "<h4>Penukaran Hadiah</h4>";
+    hadiahList.forEach(h => {
+      if (currentUser.poin >= h.poin) {
+        html += `
+          <div class="card">
+            ${h.nama} (${h.poin} Poin)
+            <button onclick="tukarHadiah('${h.nama}', ${h.poin})">Tukar</button>
+          </div>
+        `;
+      }
+    });
+    document.getElementById("formArea").innerHTML = html;
+  }
+
+  function tukarHadiah(nama, poin) {
+    if (currentUser.poin < poin) return alert("Poin tidak cukup.");
+    currentUser.poin -= poin;
+    currentUser.transaksi.push({
+      id: Date.now(),
+      jenis: "Penukaran Poin",
+      nama: nama,
+      nominal: 0,
+      status: "Sukses",
+      tanggal: new Date().toLocaleString()
+    });
+    saveUser();
+    alert("Hadiah berhasil ditukar.");
+    showMainContent();
+    <button onclick="showEditProfil()">Edit Profil</button>
+function showEditProfil() {
+  document.getElementById("formArea").innerHTML = `
+    <h4>Edit Profil</h4>
+    <input id="editNama" value="${currentUser.nama}" placeholder="Nama Baru" />
+    <input id="editHP" value="${currentUser.hp}" placeholder="Nomor HP Baru" />
+    <input type="password" id="editPassword" placeholder="Kata Sandi Baru (4 karakter)" />
+    <input type="file" id="editFoto" accept="image/*" />
+    <button onclick="simpanEditProfil()">Simpan</button>
+  `;
+}
+function simpanEditProfil() {
+  const namaBaru = document.getElementById("editNama").value.trim();
+  const hpBaru = document.getElementById("editHP").value.trim();
+  const passBaru = document.getElementById("editPassword").value.trim();
+  const fotoBaru = document.getElementById("editFoto").files[0];
+
+  if (namaBaru === "" || hpBaru === "") return alert("Nama dan HP wajib diisi.");
+
+  const users = JSON.parse(localStorage.getItem("users") || "{}");
+  const oldHP = currentUser.hp;
+
+  if (fotoBaru) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      currentUser.foto = e.target.result;
+      lanjutEdit();
+    };
+    reader.readAsDataURL(fotoBaru);
+  } else {
+    lanjutEdit();
+  }
+
+  function lanjutEdit() {
+    currentUser.nama = namaBaru;
+    currentUser.hp = hpBaru;
+    if (passBaru.length === 4) currentUser.password = passBaru;
+
+    delete users[oldHP];
+    users[hpBaru] = currentUser;
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Profil berhasil diperbarui.");
+    showMainContent();
+  }
+}
+
+  }
+
+  function saveUser() {
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
+    users[currentUser.hp] = currentUser;
+    localStorage.setItem("users", JSON.stringify(users));
+  }
+</script>

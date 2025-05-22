@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Input Data Kuota</title>
+  <link rel="stylesheet" href="tampilan.css">
+</head>
+<body>
+  <h2 id="judulProduk" class="judul-tengah">KUOTA DI GICELL</h2>
+  <form id="paketForm">
+    <div><label>Provider:</label>
+      <select id="provider" onchange="ubahJudul()">
+        <option value="">-- Pilih Provider --</option>
+        <option value="xl">XL</option>
+        <option value="axis">AXIS</option>
+        <option value="telkomsel">TELKOMSEL</option>
+        <option value="byu">BY.U</option>
+        <option value="im3">IM3</option>
+        <option value="tri">TRI</option>
+        <option value="smartfren">SmartFren</option>
+      </select>
+    </div>
+    <div><label>Paket:</label><input type="text" id="paket" required></div>
+    <div><label>Harga:</label><input type="text" id="harga"></div>
+    <div><label>Masa Aktif:</label><input type="text" id="masa" placeholder="Contoh: 1-10 hari"></div>
+    <div><label>Bonus:</label><input type="text" id="bonus"></div>
+    <div><label>Kuota Utama:</label><input type="text" id="utama"></div>
+    <div><label>Kuota Youtube:</label><input type="text" id="youtube"></div>
+    <div><label>Kuota Chat:</label><input type="text" id="chat"></div>
+    <div><label>Kuota Lokal:</label><input type="text" id="lokal"></div>
+    <div><label>Kuota Malam:</label><input type="text" id="malam"></div>
+    <div><label>Kuota Nelpon:</label><input type="text" id="nelpon"></div>
+    <div><label>Kuota Bersama:</label><input type="text" id="bersama"></div>
+    <div><label>Pertanyaan Manual 1:</label><input type="text" id="manual1"></div>
+    <div><label>Pertanyaan Manual 2:</label><input type="text" id="manual2"></div>
+    <div><label>Pertanyaan Manual 3:</label><input type="text" id="manual3"></div>
+    <div><label>Aplikasi Tertentu:</label><input type="text" id="aplikasi"></div>
+    <div><label>Bisa Semua Jaringan?</label><input type="text" id="jaringan"></div>
+    <div><label>Keterangan Tambahan:</label><input type="text" id="keterangan"></div>
+    <button type="button" onclick="tambahData()">Simpan</button>
+    <button type="button" onclick="cetakFilter()">Cetak</button>
+  </form>
+
+  <div id="filterSection">
+    <div>
+      <label>Filter Provider:</label>
+      <select id="filterProvider" onchange="tampilkanSemuaKartu()">
+        <option value="">-- Semua --</option>
+        <option value="xl">XL</option>
+        <option value="axis">AXIS</option>
+        <option value="telkomsel">TELKOMSEL</option>
+        <option value="byu">BY.U</option>
+        <option value="im3">IM3</option>
+        <option value="tri">TRI</option>
+        <option value="smartfren">SmartFren</option>
+      </select>
+    </div>
+    <div>
+      <label>Filter Masa Aktif (hari):</label>
+      <input type="number" id="filterMasaAktif" placeholder="Contoh: 10" onchange="tampilkanSemuaKartu()">
+    </div>
+  </div>
+
+  <div class="card-container" id="cardContainer"></div>
+
+  <script>
+    function ubahJudul() {
+      const provider = document.getElementById("provider").value;
+      const judul = provider ? `HARGA KUOTA ${provider.toUpperCase()} DI GICELL` : "KUOTA DI GICEL";
+      document.getElementById("judulProduk").innerText = judul;
+    }
+
+    function parseKuota(value) {
+      if (!value) return 0;
+      value = value.toLowerCase();
+      if (value.includes("mb")) return parseFloat(value) / 1024;
+      if (value.includes("gb")) return parseFloat(value);
+      return parseFloat(value) || 0;
+    }
+
+    function parseAllKuota(...kuotas) {
+      return kuotas.reduce((sum, val) => sum + parseKuota(val), 0).toFixed(2);
+    }
+
+    function tambahData() {
+      const data = ambilDataForm();
+      if (!data.provider) {
+        alert("Pilih provider terlebih dahulu!");
+        return;
+      }
+      const semuaData = JSON.parse(localStorage.getItem("paketData")) || [];
+      semuaData.push(data);
+      localStorage.setItem("paketData", JSON.stringify(semuaData));
+      tampilkanSemuaKartu();
+      document.getElementById("paketForm").reset();
+    }
+
+    function ambilDataForm() {
+      const get = id => document.getElementById(id).value;
+      const total = parseAllKuota(get("bonus"), get("utama"), get("youtube"), get("chat"), get("lokal"), get("malam"), get("bersama")) + " GB";
+      return {
+        provider: get("provider"), paket: get("paket"), harga: get("harga"), masa: get("masa"), bonus: get("bonus"),
+        utama: get("utama"), youtube: get("youtube"), chat: get("chat"), lokal: get("lokal"),
+        malam: get("malam"), nelpon: get("nelpon"), bersama: get("bersama"), aplikasi: get("aplikasi"), jaringan: get("jaringan"),
+        keterangan: get("keterangan"), manual1: get("manual1"), manual2: get("manual2"), manual3: get("manual3"), total
+      };
+    }
+
+    function tampilkanKartu(data, index) {
+      const container = document.getElementById("cardContainer");
+      const card = document.createElement("div");
+      card.className = `card card-${data.provider}`;
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="card-paket">${data.paket}</div>
+          <div class="card-bonus">${data.bonus ? "Bonus " + data.bonus : ""}</div>
+        </div>
+        <div class="card-body">
+          ${data.masa ? `<b>Masa Aktif:</b> ${data.masa}<br>` : ""}
+          ${data.utama ? `<b>Kuota Utama:</b> ${data.utama}<br>` : ""}
+          ${data.youtube ? `<b>Kuota Youtube:</b> ${data.youtube}<br>` : ""}
+          ${data.chat ? `<b>Kuota Chat:</b> ${data.chat}<br>` : ""}
+          ${data.lokal ? `<b>Kuota Lokal:</b> ${data.lokal}<br>` : ""}
+          ${data.malam ? `<b>Kuota Malam:</b> ${data.malam}<br>` : ""}
+          ${data.nelpon ? `<b>Kuota Nelpon:</b> ${data.nelpon}<br>` : ""}
+          ${data.bersama ? `<b>Kuota Bersama:</b> ${data.bersama}<br>` : ""}
+          ${data.manual1 ? `<b>Pertanyaan 1:</b> ${data.manual1}<br>` : ""}
+          ${data.manual2 ? `<b>Pertanyaan 2:</b> ${data.manual2}<br>` : ""}
+          ${data.manual3 ? `<b>Pertanyaan 3:</b> ${data.manual3}<br>` : ""}
+          <span class="total-kuota">Total Kuota: ${parseFloat(data.total).toString().replace(/\.0+$/, '')} GB</span>
+          <span class="harga">Harga: ${data.harga}</span>
+          <div class="card-actions no-print">
+            <button onclick="editData(${index})">Edit</button>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    }
+
+    function tampilkanSemuaKartu() {
+      const filterProvider = document.getElementById("filterProvider").value;
+      const filterMasaAktif = parseInt(document.getElementById("filterMasaAktif").value);
+      const semuaData = JSON.parse(localStorage.getItem("paketData")) || [];
+      const container = document.getElementById("cardContainer");
+      container.innerHTML = "";
+
+      semuaData.forEach((data, i) => {
+        let tampil = true;
+
+        if (filterProvider && data.provider !== filterProvider) tampil = false;
+
+        if (tampil && filterMasaAktif) {
+          const angkaMasa = parseInt(data.masa);
+          if (!isNaN(angkaMasa)) {
+            if (filterMasaAktif <= 10) {
+              if (angkaMasa < 1 || angkaMasa > filterMasaAktif) tampil = false;
+            } else {
+              if (angkaMasa < (filterMasaAktif - 5) || angkaMasa > filterMasaAktif) tampil = false;
+            }
+          } else {
+            tampil = false;
+          }
+        }
+
+        if (tampil) {
+          tampilkanKartu(data, i);
+        }
+      });
+    }
+
+    function editData(index) {
+      const semuaData = JSON.parse(localStorage.getItem("paketData")) || [];
+      const data = semuaData[index];
+      if (!data) return;
+      for (const key in data) {
+        if (document.getElementById(key)) {
+          document.getElementById(key).value = data[key];
+        }
+      }
+      semuaData.splice(index, 1);
+      localStorage.setItem("paketData", JSON.stringify(semuaData));
+      tampilkanSemuaKartu();
+    }
+
+    function cetakFilter() {
+      const semuaData = JSON.parse(localStorage.getItem("paketData")) || [];
+      const filter = document.getElementById("filterProvider").value;
+      const hasilFilter = !filter ? semuaData : semuaData.filter(d => d.provider === filter);
+      const container = document.getElementById("cardContainer");
+      container.innerHTML = "";
+      hasilFilter.forEach((d, i) => tampilkanKartu(d, i));
+      window.print();
+    }
+
+    window.onload = tampilkanSemuaKartu;
+  </script>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Registrasi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .registration-form {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 320px;
+        }
+
+        .registration-form h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .registration-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .registration-form input[type="text"],
+        .registration-form input[type="tel"],
+        .registration-form input[type="password"],
+        .registration-form input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .registration-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .registration-form button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+<div class="registration-form">
+    <h2>Registrasi</h2>
+    <form onsubmit="simpanData(event)">
+        <label for="nama">Nama</label>
+        <input type="text" id="nama" name="nama" required>
+
+        <label for="nohp">No HP</label>
+        <input type="tel" id="nohp" name="nohp" pattern="[0-9]{10,15}" required
+               placeholder="Contoh: 081234567890">
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="foto">Foto Profil</label>
+        <input type="file" id="foto" name="foto" accept="image/*" required>
+
+        <button type="submit">Daftar</button>
+    </form>
+</div>
+
+<script>
+    function simpanData(event) {
+        event.preventDefault(); // Mencegah reload halaman
+
+        const nama = document.getElementById('nama').value;
+        const nohp = document.getElementById('nohp').value;
+        const password = document.getElementById('password').value;
+        const foto = document.getElementById('foto').files[0];
+
+        if (!foto) {
+            alert("Silakan unggah foto profil.");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function () {
+            // Simpan data ke localStorage
+            localStorage.setItem('nama', nama);
+            localStorage.setItem('nohp', nohp);
+            localStorage.setItem('password', password);
+            localStorage.setItem('foto', reader.result); // Foto dalam format base64
+
+            // Arahkan ke halaman Data User
+            window.location.href = "data_user.html";
+        };
+
+        reader.readAsDataURL(foto);
+    }
+</script>
+
+</body>
+</html>

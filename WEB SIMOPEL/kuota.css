@@ -1,0 +1,153 @@
+/* RESET DASAR */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f4f4;
+    color: #333;
+    text-align: center;
+}
+
+/* HEADER */
+header {
+    background: #1A2238;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #FF6A3D;
+    font-family: 'Segoe Script', cursive;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+nav ul li a:hover {
+    color: #FF6A3D;
+}
+
+.btn-cta {
+    background: #FF6A3D;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-cta:hover {
+    background: #e85a2f;
+}
+
+/* MARQUEE */
+.marquee {
+    margin-top: 20px;
+    font-size: 20px;
+    color: #1b0e8e;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+}
+
+.marquee span {
+    display: inline-block;
+    animation: scroll 20s linear infinite;
+}
+
+@keyframes scroll {
+    from { transform: translateX(100%); }
+    to { transform: translateX(-100%); }
+}
+
+
+@keyframes slide {
+    0% { left: 100%; opacity: 0; }
+    5% { left: 0; opacity: 1; }
+    33% { left: 0; opacity: 1; }
+    38% { left: -100%; opacity: 0; }
+    100% { left: -100%; opacity: 0; }
+}
+
+/* BUTTON GRID */
+.button-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    justify-items: center;
+}
+
+.button-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    transition: transform 0.3s;
+}
+
+.button-item img:hover {
+    transform: scale(1.1);
+}
+
+.button-item p {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1b0e8e;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    header {
+        flex-direction: row; /* Biarkan tetap horizontal */
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    nav ul {
+        flex-direction: row; /* Tetap sejajar */
+        gap: 10px;
+        padding: 0;
+    }
+
+    .btn-cta {
+        margin-top: 10px;
+    }
+
+    .logo {
+        font-size: 22px;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .slider {
+        height: 150px;
+    }
+
+    .logo {
+        font-size: 22px;
+    }

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tarik Tunai QR Dinamis</title>
+  <button class="btn-cta" onclick="window.location.href='file:///C:/Users/NAGASARI/Desktop/WEB%20SIMOPEL/index.html';">Kembali</button>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0288d1;
+    }
+
+    label {
+      margin-top: 15px;
+      display: block;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .output, .info {
+      background: #e0f7fa;
+      padding: 15px;
+      margin-top: 20px;
+      border-left: 5px solid #0288d1;
+      border-radius: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0288d1;
+      color: white;
+      border: none;
+      margin-top: 15px;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0277bd;
+    }
+
+    #qrSection {
+      display: none;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    #qrSection img {
+      max-width: 220px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Tarik Tunai</h2>
+    <p><strong>Petunjuk:</strong> Masukkan nominal dan pilih metode penarikan.</p>
+
+    <label for="nominal">Jumlah Nominal (Rp):</label>
+    <input type="number" id="nominal" placeholder="Contoh: 200000">
+
+    <label for="metode">Pilih Metode Penarikan:</label>
+    <select id="metode">
+      <option value="">-- Pilih --</option>
+      <option value="dana">DANA - 081313792897 An Ridwan</option>
+      <option value="gopay">Gopay - 081287973539 An Gicell</option>
+      <option value="shopee">ShopeePay - 08xxxxxxx</option>
+      <option value="bca">BCA - 1970866872 An Ridwan</option>
+      <option value="mandiri">Mandiri - 1820011173531 An Laeli</option>
+      <option value="seabank">SeaBank - 90130506604 An Ridwan</option>
+    </select>
+
+    <div class="output" id="hasil"></div>
+    <div class="info" id="rekening" style="display:none;"></div>
+    <button onclick="salinRekening()" id="btnSalin" style="display:none;">Salin & Buka Aplikasi</button>
+
+    <div id="qrSection">
+      <p><strong>Scan QR untuk membayar:</strong></p>
+      <img id="qrImage" src="" alt="QR Code">
+      <p id="infoNominal"></p>
+    </div>
+  </div>
+
+  <script>
+    const rekeningTujuan = {
+      dana: { no: "081313792897", nama: "An Ridwan", qr: "qr-dana.png", url: "https://link.dana.id" },
+      gopay: { no: "081287973539", nama: "An Gicell", qr: "qr-gopay.png", url: "https://gopay.co.id" },
+      shopee: { no: "08xxxxxxxxx", nama: "An Shopee", qr: "qr-shopeepay.png", url: "https://shopeepay.co.id" },
+      bca: { no: "1970866872", nama: "An Ridwan", url: "https://ibank.klikbca.com" },
+      mandiri: { no: "1820011173531", nama: "An Laeli", url: "https://livin.mandiri.co.id" },
+      seabank: { no: "90130506604", nama: "An Ridwan", url: "https://seabank.co.id" }
+    };
+
+    const nominalInput = document.getElementById("nominal");
+    const metodeSelect = document.getElementById("metode");
+    const hasilDiv = document.getElementById("hasil");
+    const rekeningDiv = document.getElementById("rekening");
+    const btnSalin = document.getElementById("btnSalin");
+    const qrSection = document.getElementById("qrSection");
+    const qrImage = document.getElementById("qrImage");
+    const infoNominal = document.getElementById("infoNominal");
+
+    function updateHasil() {
+      const nominal = parseFloat(nominalInput.value);
+      const metode = metodeSelect.value;
+
+      if (isNaN(nominal) || nominal <= 0) {
+        hasilDiv.textContent = '';
+        rekeningDiv.style.display = 'none';
+        btnSalin.style.display = 'none';
+        qrSection.style.display = 'none';
+        return;
+      }
+
+      hasilDiv.textContent = "Jumlah yang harus dibayarkan: Rp " + nominal.toLocaleString("id-ID");
+
+      const rek = rekeningTujuan[metode];
+      if (rek) {
+        rekeningDiv.innerHTML = `Silakan transfer ke:<br><strong>${rek.no}</strong><br>${rek.nama}`;
+        rekeningDiv.style.display = 'block';
+        btnSalin.style.display = 'block';
+        btnSalin.setAttribute("data-rekening", rek.no);
+        btnSalin.setAttribute("data-url", rek.url);
+
+        if (rek.qr) {
+          qrSection.style.display = 'block';
+          qrImage.src = rek.qr;
+          infoNominal.textContent = "Jumlah bayar: Rp " + nominal.toLocaleString("id-ID");
+        } else {
+          qrSection.style.display = 'none';
+        }
+      } else {
+        rekeningDiv.style.display = 'none';
+        btnSalin.style.display = 'none';
+        qrSection.style.display = 'none';
+      }
+    }
+
+    function salinRekening() {
+      const noRek = btnSalin.getAttribute("data-rekening");
+      const url = btnSalin.getAttribute("data-url");
+
+      navigator.clipboard.writeText(noRek).then(() => {
+        alert("Nomor tujuan berhasil disalin: " + noRek + "\n\n📤 Harap segera kirim bukti transfer ke WhatsApp.");
+        window.open(`https://wa.me/6281313792897?text=Saya%20sudah%20transfer%20ke%20${noRek},%20berikut%20buktinya:`, "_blank");
+
+        if (url) {
+          setTimeout(() => {
+            window.open(url, "_blank");
+          }, 1500);
+        }
+      });
+    }
+
+    nominalInput.addEventListener("input", updateHasil);
+    metodeSelect.addEventListener("change", updateHasil);
+  </script>
+</body>
+</html>

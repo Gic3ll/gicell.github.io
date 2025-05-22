@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Formulir Data</h2>
+        <form id="dataForm" enctype="multipart/form-data" onsubmit="submitForm(event)">
+            <label for="tanggal">Tanggal:</label>
+            <input type="date" name="tanggal" required>
+            
+            <label for="petugas">Petugas:</label>
+            <select name="petugas" id="petugas" onchange="togglePetugasInput()">
+                <option value="Ridwan">Ridwan</option>
+                <option value="Dede Rahmat">Dede Rahmat</option>
+                <option value="Lainnya">Lainnya</option>
+            </select>
+            <input type="text" name="petugas_lainnya" id="petugas_lainnya" placeholder="Isi jika lainnya" style="display:none">
+
+            <label for="kendaraan">Kendaraan:</label>
+            <select name="kendaraan" id="kendaraan" onchange="toggleKendaraanInput()">
+                <option value="Mobil Pelayanan">Mobil Pelayanan</option>
+                <option value="Mobil Ambulans">Mobil Ambulans</option>
+                <option value="Mobil Maskara">Mobil Maskara</option>
+                <option value="Lainnya">Lainnya</option>
+            </select>
+            <input type="text" name="kendaraan_lainnya" id="kendaraan_lainnya" placeholder="Isi jika lainnya" style="display:none">
+            
+            <label for="pasien">Pasien/Pemohon:</label>
+            <input type="text" name="pasien" required>
+            
+            <label for="alamat">Alamat:</label>
+            <input type="text" name="alamat" required>
+            
+            <label for="rt">RT:</label>
+            <input type="text" name="rt" required>
+            
+            <label for="rw">RW:</label>
+            <input type="text" name="rw" required>
+            
+            <label for="desa">Desa/Kel:</label>
+            <input type="text" name="desa" required>
+            
+            <label for="kecamatan">Kecamatan:</label>
+            <input type="text" name="kecamatan" required>
+            
+            <label for="tujuan">Tujuan:</label>
+            <input type="text" name="tujuan" required>
+            
+            <label for="jenis_keperluan">Jenis Keperluan:</label>
+            <select name="jenis_keperluan" id="jenis_keperluan" onchange="toggleJenisKeperluanInput()">
+                <option value="Berobat">Berobat</option>
+                <option value="Menjemput">Menjemput</option>
+                <option value="Menjenguk">Menjenguk</option>
+                <option value="Melahirkan">Melahirkan</option>
+                <option value="Dinas">Dinas</option>
+                <option value="Lembaga">Lembaga</option>
+                <option value="Lainnya">Lainnya</option>
+            </select>
+            <input type="text" name="jenis_keperluan_lainnya" id="jenis_keperluan_lainnya" placeholder="Isi jika lainnya" style="display:none">
+            
+            <label for="jumlah_penumpang">Jumlah Penumpang:</label>
+            <input type="number" name="jumlah_penumpang" required>
+            
+            <label for="biaya">Biaya Dikeluarkan:</label>
+            <select name="biaya" id="biaya" onchange="toggleBiayaInput()">
+                <option value="Pribadi">Pribadi</option>
+                <option value="Swadaya Rt/ Rw">Swadaya RT/RW</option>
+                <option value="Bantuan Desa">Bantuan Desa</option>
+                <option value="Lainnya">Lainnya</option>
+            </select>
+            <input type="text" name="biaya_lainnya" id="biaya_lainnya" placeholder="Isi jika lainnya" style="display:none">
+            
+            <button type="submit">Kirim</button>
+        </form>
+    </div>
+
+    <script>
+        function togglePetugasInput() {
+            document.getElementById("petugas_lainnya").style.display = 
+                document.getElementById("petugas").value === "Lainnya" ? "block" : "none";
+        }
+
+        function toggleKendaraanInput() {
+            document.getElementById("kendaraan_lainnya").style.display = 
+                document.getElementById("kendaraan").value === "Lainnya" ? "block" : "none";
+        }
+
+        function toggleJenisKeperluanInput() {
+            document.getElementById("jenis_keperluan_lainnya").style.display = 
+                document.getElementById("jenis_keperluan").value === "Lainnya" ? "block" : "none";
+        }
+
+        function toggleBiayaInput() {
+            document.getElementById("biaya_lainnya").style.display = 
+                document.getElementById("biaya").value === "Lainnya" ? "block" : "none";
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+
+            let formData = new FormData(document.getElementById('dataForm'));
+            
+            fetch('https://script.google.com/macros/s/AKfycbwChNbJSkJdEbe6EQK7TMVAbBICwBmYXRTUv4S8XQn3eOc3E4p-ITqA2DEKnPNBEH4QRQ/exec', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message); // Menampilkan pesan sukses
+                document.getElementById('dataForm').reset(); // Reset form setelah pengiriman
+            })
+            .catch(error => console.error('Error:', error)); // Menangani error jika ada
+        }
+    </script>
+</body>
+</html>
+        }
+    </script>
+</body>
+</html>

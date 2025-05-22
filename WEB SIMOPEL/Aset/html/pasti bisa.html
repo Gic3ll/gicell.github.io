@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Formulir Kendaraan</title>
+  <script>
+    function submitForm() {
+  var form = document.getElementById("form-kendaraan");
+  var formData = new FormData(form);
+
+  fetch("https://script.google.com/macros/s/AKfycbxNKIRwbcVRM0fmavRCrfAlrdLjVSe8AMx6V0Tp14bceYFDltiwadl8jIGE3dplLPjr/exec", {  // Ganti dengan URL Web App setelah deploy
+    method: "POST",
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert(data.status);
+    if (data.status === "Sukses") {
+      form.reset();
+    }
+  })
+  .catch(error => {
+    console.error("Error:", error);
+  });
+}
+  </script>
+</head>
+<body>
+  <h2>Formulir Kendaraan</h2>
+  <form id="form-kendaraan">
+    <label>Petugas:</label>
+    <select name="petugas">
+      <option value="A. Ridwan">A. Ridwan</option>
+      <option value="B. Dede Rahmat">B. Dede Rahmat</option>
+      <option value="Lainnya">Lainnya</option>
+    </select>
+    <br><br>
+
+    <label>Jenis Kendaraan:</label>
+    <select name="jenisKendaraan">
+      <option value="Ambulans">Ambulans</option>
+      <option value="Mobil Pelayanan">Mobil Pelayanan</option>
+      <option value="Mobil Maskara">Mobil Maskara</option>
+    </select>
+    <br><br>
+
+    <label>Pemohon:</label>
+    <input type="text" name="pemohon" required>
+    <br><br>
+
+    <label>Alamat:</label>
+    <input type="text" name="alamat" required>
+    <br><br>
+
+    <label>RT:</label>
+    <input type="number" name="rt" required>
+    <br><br>
+
+    <label>RW:</label>
+    <input type="number" name="rw" required>
+    <br><br>
+
+    <label>Desa/Kec:</label>
+    <input type="text" name="desaKec" required>
+    <br><br>
+
+    <label>Tujuan:</label>
+    <input type="text" name="tujuan" required>
+    <br><br>
+
+    <label>Jenis Keperluan:</label>
+    <select name="jenisKeperluan">
+      <option value="Dinas">Dinas</option>
+      <option value="Mengantar Pasien">Mengantar Pasien</option>
+      <option value="Menjemput">Menjemput</option>
+      <option value="Lainnya">Lainnya</option>
+    </select>
+    <br><br>
+
+    <label>Jumlah Penumpang:</label>
+    <input type="number" name="jumlahPenumpang" required>
+    <br><br>
+
+    <label>Jenis Biaya:</label>
+    <select name="jenisBiaya">
+      <option value="Pribadi">Pribadi</option>
+      <option value="Swadaya RT/RW">Swadaya RT/RW</option>
+      <option value="Tidak Ada">Tidak Ada</option>
+      <option value="Lainnya">Lainnya</option>
+    </select>
+    <br><br>
+
+    <label>Kilometer:</label>
+    <input type="number" name="kilometer" required>
+    <br><br>
+
+    <label>Foto Nota:</label>
+    <input type="file" name="fotoNota" required>
+    <br><br>
+
+    <label>Foto Kegiatan:</label>
+    <input type="file" name="fotoKegiatan" required>
+    <br><br>
+
+    <button type="button" onclick="submitForm()">Kirim</button>
+  </form>
+</body>
+</html>

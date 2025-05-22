@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Penggunaan Kendaraan</title>
+</head>
+<body>
+    <h2>Formulir Penggunaan Kendaraan</h2>
+    <form id="dataForm">
+        <label>Tanggal:</label>
+        <input type="text" id="tanggal" readonly><br><br>
+
+        <label>Petugas:</label>
+        <select id="petugas" onchange="toggleManualInput('petugas')">
+            <option value="A. Ridwan">A. Ridwan</option>
+            <option value="B. Dede Rahmat">B. Dede Rahmat</option>
+            <option value="Lainnya">Lainnya</option>
+        </select>
+        <input type="text" id="petugasLain" placeholder="Masukkan nama" style="display:none;"><br><br>
+
+        <label>Jenis Kendaraan:</label>
+        <select id="jenisKendaraan">
+            <option value="Ambulans">Ambulans</option>
+            <option value="Mobil Pelayanan">Mobil Pelayanan</option>
+            <option value="Mobil Maskara">Mobil Maskara</option>
+        </select><br><br>
+
+        <label>Pemohon:</label>
+        <input type="text" id="pemohon" required><br><br>
+
+        <label>Alamat:</label>
+        <input type="text" id="alamat" required><br><br>
+
+        <label>RT:</label>
+        <input type="number" id="rt" min="0" max="999" required><br><br>
+
+        <label>RW:</label>
+        <input type="number" id="rw" min="0" max="999" required><br><br>
+
+        <label>Desa/Kec:</label>
+        <input type="text" id="desaKec" required><br><br>
+
+        <label>Tujuan:</label>
+        <input type="text" id="tujuan" required><br><br>
+
+        <label>Jenis Keperluan:</label>
+        <select id="jenisKeperluan" onchange="toggleManualInput('jenisKeperluan')">
+            <option value="Dinas">Dinas</option>
+            <option value="Mengantar Pasien">Mengantar Pasien</option>
+            <option value="Menjemput">Menjemput</option>
+            <option value="Lainnya">Lainnya</option>
+        </select>
+        <input type="text" id="keperluanLain" placeholder="Masukkan keperluan" style="display:none;"><br><br>
+
+        <label>Jumlah Penumpang:</label>
+        <input type="number" id="jumlahPenumpang" required><br><br>
+
+        <label>Jenis Biaya:</label>
+        <select id="jenisBiaya" onchange="toggleManualInput('jenisBiaya')">
+            <option value="Pribadi">Pribadi</option>
+            <option value="Swadaya RT/RW">Swadaya RT/RW</option>
+            <option value="Tidak Ada">Tidak Ada</option>
+            <option value="Lainnya">Lainnya</option>
+        </select>
+        <input type="text" id="biayaLain" placeholder="Masukkan biaya" style="display:none;"><br><br>
+
+        <label>Kilometer:</label>
+        <input type="number" id="kilometer" required><br><br>
+
+        <label>Poto Nota:</label>
+        <input type="file" id="potoNota" accept="image/*"><br><br>
+
+        <label>Poto Kegiatan:</label>
+        <input type="file" id="potoKegiatan" accept="image/*"><br><br>
+
+        <button type="submit">Kirim</button>
+    </form>
+    <p id="status"></p>
+
+    <script>
+        document.getElementById("tanggal").value = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+        function toggleManualInput(field) {
+            let select = document.getElementById(field);
+            let input = document.getElementById(field + "Lain");
+            input.style.display = select.value === "Lainnya" ? "block" : "none";
+        }
+
+        document.getElementById("dataForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            let statusEl = document.getElementById("status");
+            statusEl.innerHTML = "Mengirim data...";
+
+            let formData = new FormData();
+            formData.append("tanggal", document.getElementById("tanggal").value);
+            formData.append("petugas", document.getElementById("petugas").value === "Lainnya" ? document.getElementById("petugasLain").value : document.getElementById("petugas").value);
+            formData.append("jenisKendaraan", document.getElementById("jenisKendaraan").value);
+            formData.append("pemohon", document.getElementById("pemohon").value);
+            formData.append("alamat", document.getElementById("alamat").value);
+            formData.append("rt", document.getElementById("rt").value);
+            formData.append("rw", document.getElementById("rw").value);
+            formData.append("desaKec", document.getElementById("desaKec").value);
+            formData.append("tujuan", document.getElementById("tujuan").value);
+            formData.append("jenisKeperluan", document.getElementById("jenisKeperluan").value === "Lainnya" ? document.getElementById("keperluanLain").value : document.getElementById("jenisKeperluan").value);
+            formData.append("jumlahPenumpang", document.getElementById("jumlahPenumpang").value);
+            formData.append("jenisBiaya", document.getElementById("jenisBiaya").value === "Lainnya" ? document.getElementById("biayaLain").value : document.getElementById("jenisBiaya").value);
+            formData.append("kilometer", document.getElementById("kilometer").value);
+            formData.append("potoNota", document.getElementById("potoNota").files[0]);
+            formData.append("potoKegiatan", document.getElementById("potoKegiatan").files[0]);
+
+            let response = await fetch("https://script.google.com/macros/s/AKfycbypFbr384q6aycC438X-fNf6Zk1euJBri1qU-aNwu1HZvq74ZVcSoGozYmqpzaf12__/exec", { method: "POST", body: formData });
+            let result = await response.json();
+            statusEl.innerHTML = result.status === "success" ? "Data berhasil dikirim!" : `Error: ${result.message}`;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Harga Pulsa</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: #f8f9fa;
+      padding: 1rem;
+    }
+    .provider-table {
+      display: none;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 2rem;
+      padding: 1rem;
+    }
+    .table thead {
+      font-weight: bold;
+    }
+    .telkomsel { background-color: #fff5f5; }
+    .byu { background-color: #f4f0fb; }
+    .indosat { background-color: #fffbea; }
+    .tri { background-color: #f5efff; }
+    .xl { background-color: #e6f7ff; }
+    .axis { background-color: #bb0776; }
+
+    .logo {
+      max-width: 40px;
+      margin: 0 auto 1rem;
+      display: block;
+    }
+  </style>
+</head>
+<header>
+        <button class="btn-cta" onclick="window.location.href='file:///C:/Users/NAGASARI/Desktop/WEB%20SIMOPEL/index.html';">Kembali</button>
+    </header>
+<body>
+  <div class="container text-center">
+    <h2 class="mb-4"><i class="fas fa-mobile-alt text-primary"></i> Daftar Harga Pulsa</h2>
+    
+    <div class="mb-3">
+      <select id="providerSelect" class="form-select w-auto mx-auto">
+        <option value="" selected disabled>Pilih Provider</option>
+        <option value="telkomsel">Telkomsel</option>
+        <option value="byu">BY.U</option>
+        <option value="indosat">Indosat</option>
+        <option value="tri">Three</option>
+        <option value="xl">XL</option>
+        <option value="axis">Axis</option>
+      </select>
+    </div>
+
+    <div id="tablesContainer">
+      <!-- Tabel Telkomsel -->
+      <div id="telkomsel" class="provider-table telkomsel">
+        <img src="C:/Users/NAGASARI/Desktop/WEB SIMOPEL/Aset/icon/paket/telkomsel.png" alt="Telkomsel" class="logo" />
+        <table class="table table-bordered">
+          <thead class="table-danger text-center">
+            <tr><th>Pulsa</th><th>Harga Jual</th></tr>
+          </thead>
+          <tbody id="telkomselBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Tabel BY.U -->
+      <div id="byu" class="provider-table byu">
+        <img src="C:/Users/NAGASARI/Desktop/WEB SIMOPEL/Aset/icon/paket/byu.png" alt="BY.U" class="logo" />
+        <table class="table table-bordered">
+          <thead class="table-primary text-center">
+            <tr><th>Pulsa</th><th>Harga Jual</th></tr>
+          </thead>
+          <tbody id="byuBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Tabel Indosat -->
+      <div id="indosat" class="provider-table indosat">
+        <img src="C:/Users/NAGASARI/Desktop/WEB SIMOPEL/Aset/icon/paket/m3.png" alt="Indosat" class="logo" />
+        <table class="table table-bordered">
+          <thead class="table-warning text-center">
+            <tr><th>Pulsa</th><th>Harga Jual</th></tr>
+          </thead>
+          <tbody id="indosatBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Tabel Tri -->
+      <div id="tri" class="provider-table tri">
+        <img src="C:/Users/NAGASARI/Desktop/WEB SIMOPEL/Aset/icon/paket/3.png" alt="Three" class="logo" />
+        <table class="table table-bordered">
+          <thead class="table-secondary text-center">
+            <tr><th>Pulsa</th><th>Harga Jual</th></tr>
+          </thead>
+          <tbody id="triBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Tabel xl -->
+      <div id="xl" class="provider-table xl">
+        <img src="C:/Users/NAGASARI/Desktop/WEB SIMOPEL/Aset/icon/paket/xl.png" alt="XL" class="logo" />
+        <table class="table table-bordered">
+          <thead class="table-info text-center">
+            <tr><th>Pulsa</th><th>Harga Jual</th></tr>
+          </thead>
+          <tbody id="XLBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+          <!-- Tabel Axis -->
+      <div id="axis" class="provider-table Axis">
+        <img src="C:/Users/NAGASARI/Desktop/WEB SIMOPEL/Aset/icon/paket/axis.png" alt="AXIS" class="logo" />
+        <table class="table table-bordered">
+          <thead class="table-info text-center">
+            <tr><th>Pulsa</th><th>Harga Jual</th></tr>
+          </thead>
+          <tbody id="axisBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const select = document.getElementById("providerSelect");
+    const tables = document.querySelectorAll(".provider-table");
+
+    select.addEventListener("change", () => {
+      tables.forEach(table => table.style.display = "none");
+      const selected = document.getElementById(select.value);
+      if (selected) selected.style.display = "block";
+    });
+
+    const data = {
+      telkomsel: [7000,13000,17000,22000,27000,32000,37000,43000,47000,52000,57000,62000,67000,73000,77000,83000,88000,93000,98000,103000],
+      byu:       [7000,13000,17000,22000,27000,32000,37000,43000,47000,52000,57000,62000,67000,73000,77000,83000,88000,93000,98000,103000],
+      indosat:   [8000,13000,18000,23000,28000,33000,43000,53000,63000,73000,83000,93000,103000],
+      tri:       [8000,13000,18000,23000,28000,33000,42000,53000,63000,72000,82000,92000,103000],
+      XL:        [7000,13000,17000,22000,27000,32000,43000,53000,63000,73000,83000,93000,105000],
+      axis:      [7000,13000,17000,22000,27000,32000,43000,53000,63000,73000,83000,93000,105000],
+    };
+
+    const pulsa = [5000,10000,15000,20000,25000,30000,35000,40000,45000,50000,55000,60000,65000,70000,75000,80000,85000,90000,95000,100000];
+
+    for (let key in data) {
+      const body = document.getElementById(`${key}Body`);
+      data[key].forEach((harga, i) => {
+        const tr = document.createElement("tr");
+        tr.className = "text-center";
+        tr.innerHTML = `<td>Rp${(pulsa[i] || pulsa[i - 1]).toLocaleString()}</td><td>Rp${harga.toLocaleString()}</td>`;
+        body.appendChild(tr);
+      });
+    }
+  </script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

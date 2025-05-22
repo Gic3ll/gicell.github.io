@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulir Servis Mobil</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f9;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .form-container h2 {
+      text-align: center;
+    }
+    .form-container label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    .form-container input[type="text"],
+    .form-container input[type="date"],
+    .form-container input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+    .form-container button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .form-container button:hover {
+      background-color: #45a049;
+    }
+    .service-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .service-item input[type="number"] {
+      width: 80px;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Formulir Servis Mobil</h2>
+    <form id="service-form">
+      <label for="owner-name">Nama Pemilik:</label>
+      <input type="text" id="owner-name" required>
+
+      <label for="car-model">Model Mobil:</label>
+      <input type="text" id="car-model" required>
+
+      <label for="service-date">Tanggal Servis:</label>
+      <input type="date" id="service-date" required>
+
+      <label>Jenis Servis:</label>
+      <div id="service-options">
+        <div class="service-item">
+          <label><input type="checkbox" value="Ganti Oli" data-cost="300000"> Ganti Oli</label>
+          <input type="number" value="300000" min="0" class="service-cost">
+        </div>
+        <div class="service-item">
+          <label><input type="checkbox" value="Ganti Filter Oli" data-cost="100000"> Ganti Filter Oli</label>
+          <input type="number" value="100000" min="0" class="service-cost">
+        </div>
+        <div class="service-item">
+          <label><input type="checkbox" value="Ganti Ban" data-cost="800000"> Ganti Ban</label>
+          <input type="number" value="800000" min="0" class="service-cost">
+        </div>
+        <div class="service-item">
+          <label><input type="checkbox" value="Ganti Kampas Rem" data-cost="250000"> Ganti Kampas Rem</label>
+          <input type="number" value="250000" min="0" class="service-cost">
+        </div>
+        <div class="service-item">
+          <label><input type="checkbox" value="Tambah Oli Rem" data-cost="50000"> Tambah Oli Rem</label>
+          <input type="number" value="50000" min="0" class="service-cost">
+        </div>
+      </div>
+
+      <label for="total-cost">Total Biaya:</label>
+      <input type="text" id="total-cost" readonly>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <script>
+    const serviceForm = document.getElementById('service-form');
+    const serviceOptions = document.getElementById('service-options');
+    const totalCostInput = document.getElementById('total-cost');
+
+    function calculateTotalCost() {
+      let totalCost = 0;
+      const serviceItems = serviceOptions.querySelectorAll('.service-item');
+
+      serviceItems.forEach(item => {
+        const checkbox = item.querySelector('input[type="checkbox"]');
+        const costInput = item.querySelector('input[type="number"]');
+
+        if (checkbox.checked) {
+          totalCost += parseInt(costInput.value || 0);
+        }
+      });
+
+      totalCostInput.value = totalCost;
+    }
+
+    serviceOptions.addEventListener('change', calculateTotalCost);
+    serviceOptions.addEventListener('input', calculateTotalCost);
+
+    serviceForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      alert('Formulir berhasil disubmit! Total Biaya: ' + totalCostInput.value);
+      serviceForm.reset();
+      totalCostInput.value = '';
+    });
+  </script>
+</body>
+</html>
